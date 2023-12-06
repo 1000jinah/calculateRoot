@@ -5,8 +5,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Enable CORS for all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 실제 배포 시에는 허용할 도메인을 명시해주는 것이 좋습니다.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class CashFlowInput(BaseModel):
     initialPayment: float
