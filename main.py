@@ -1,8 +1,18 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import numpy as np
 
 app = FastAPI()
+
+# Allow all origins in this example, but you should restrict this to your actual frontend's origin.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ProjectionGraphInput(BaseModel):
     initialPayment: float
@@ -70,7 +80,7 @@ def calc_irr(values):
     return rate
 
 @app.post("/projection_graph")
-def projection_graph(input_data: ProjectionGraphInput):
+async def projection_graph(input_data: ProjectionGraphInput):
     initialPayment = input_data.initialPayment
     monthlyPayment = input_data.monthlyPayment
     MonthlyPaymentPeriod = input_data.MonthlyPaymentPeriod
